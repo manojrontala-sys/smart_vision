@@ -1,0 +1,1 @@
+web: python manage.py migrate --noinput && gunicorn Flipkart_Grid_6_0.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --threads 2 --timeout 120

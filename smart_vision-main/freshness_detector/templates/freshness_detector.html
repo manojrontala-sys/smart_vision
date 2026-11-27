@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Freshness Detector</title>
+    <link rel="stylesheet" href="{% static 'css/main-style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            background-image: url("{% static 'images/fruit-veg-bg.png' %}");
+        }
+    </style>
+    <script>
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+        function showFileName(input) {
+            const fileName = input.files[0].name;
+            document.getElementById('file-name').innerText = 'Selected file: ' + fileName;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h3>Freshness Detector</h3>
+        </header>
+        <div style="text-align: left;"><a href="/"><i class="fa fa-arrow-left"></i> Home</a></div>
+        <div style="text-align: right;"><a href="history"><button class="btn min">History</button></a></div>
+        <form method="post" enctype="multipart/form-data" onsubmit="showLoading()">
+            {% csrf_token %}
+            <div style="text-align: center;" class="row">
+                <div class="upload-btn-wrapper">
+                    <button class="btn">Upload an image</button>
+                    <input type="file" name="image" accept="image/*" required onchange="showFileName(this)">
+                </div>
+                <button type="submit" class="btn">Predict Freshness</button>
+                <p id="file-name"></p>
+            </div>
+        </form>
+        <div id="loading" class="loading"></div>
+        {% if image_uploaded %}
+            <div class="results">
+                <img src="{{ uploaded_image_url }}" alt="Uploaded Image">
+                <div class="result-details">
+                    <h2>Results:</h2>
+                    <p><label>Predicted Class:</label> {{ predicted_class }}</p>
+                    <p><label>Confidence Score:</label> {{ confidence_score }}</p>
+                    <p><label>Time Taken:</label> {{ time_taken }} seconds</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
